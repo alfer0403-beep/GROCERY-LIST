@@ -1,0 +1,203 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Grocery List</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#a93a9a"><link rel="icon" href="icons/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="icons/icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Groceries">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#fbf3f8;--card:#fff;--ink:#3a2a3a;--mute:#94829a;--line:#efdcea;--acc:#a93a9a;--acc2:#f5e1f1;--warn:#c8553d;--onacc:#fff}
+:root[data-pal="rose"][data-theme="dark"]{--bg:#1c141c;--card:#281d28;--ink:#f7eaf5;--mute:#b9a3b8;--line:#3e2d3e;--acc:#d98ad2;--acc2:#3b2539;--warn:#f08a73;--onacc:#2a0f28}
+:root[data-pal="blue"][data-theme="light"]{--bg:#f1f6fc;--card:#fff;--ink:#1b2a3a;--mute:#6b8097;--line:#dae5f1;--acc:#1f6fc2;--acc2:#deedfb;--warn:#c8553d;--onacc:#fff}
+:root[data-pal="blue"][data-theme="dark"]{--bg:#0f1620;--card:#18222e;--ink:#e8f0f8;--mute:#8fa4b9;--line:#263545;--acc:#5aa9f0;--acc2:#1b3149;--warn:#f08a73;--onacc:#07192b}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;max-width:560px;margin:auto;padding-bottom:90px}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+header{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;padding:14px 16px 8px}
+h1{font:700 26px Georgia,serif;margin:0 0 10px;display:flex;justify-content:space-between;align-items:center}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}
+.chip{white-space:nowrap;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:7px 13px;font-size:14px}
+.chip.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.chip.sug{background:var(--acc2);border-color:transparent}
+.add{display:flex;gap:8px}
+.add input,.f input,.f select{flex:1;width:100%;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;outline:none}
+.add input:focus,.f input:focus{border-color:var(--acc)}
+.ib{width:46px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:18px}
+.ib.go{background:var(--acc);color:#fff;border-color:var(--acc)}
+.ib.rec{background:var(--warn);color:#fff}
+.tabs{display:flex;margin:10px 0 0;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;padding:10px;color:var(--mute);font-weight:600;border-bottom:3px solid transparent}
+.tabs button.on{color:var(--acc);border-color:var(--acc)}
+main{padding:0 16px}
+.sec{font:600 12px system-ui;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:18px 2px 6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.box{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center;color:#fff;font-size:15px}
+.done .box{background:var(--acc);border-color:var(--acc)}
+.nm{flex:1;min-width:0}
+.nm b{font-weight:600}.nm small{display:block;color:var(--mute);font-size:13px}
+.done .nm{opacity:.45}.done .nm b{text-decoration:line-through}
+.q{display:flex;align-items:center;gap:2px;color:var(--mute)}
+.q button{width:28px;height:28px;border-radius:50%;background:var(--bg);font-size:16px}
+.q span{min-width:20px;text-align:center;color:var(--ink);font-weight:600}
+.star{font-size:20px;color:var(--line)}.star.on{color:#e8a600}
+.badge{background:var(--acc);color:#fff;border-radius:99px;font-size:13px;padding:2px 9px;font-weight:600}
+.mute{color:var(--mute)}
+.chip.on,.ib.go,.btn.p,.badge,.done .box{color:var(--onacc)}
+.nm .pl{display:flex;align-items:center;flex-wrap:wrap;gap:3px;margin-top:4px}.pr{width:64px;font:inherit;font-size:13px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:3px 6px}.pr:focus{outline:none;border-color:var(--acc)}.nm strong{color:var(--ink);font-weight:600;margin-left:2px}.nm em{font-style:italic;margin-left:2px}
+.sheet textarea,.sheet select,.sheet input{width:100%;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}.sheet textarea{resize:vertical}
+.empty{text-align:center;color:var(--mute);padding:50px 20px}
+.bar{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1px solid var(--line);display:flex;gap:10px;max-width:560px;margin:auto;align-items:center}
+.bar .info{flex:1;font-size:14px;color:var(--mute)}.bar .info b{color:var(--ink);display:block;font-size:16px}
+.btn{border-radius:12px;padding:11px 16px;font-weight:600;background:var(--card);border:1px solid var(--line)}
+.btn.p{background:var(--acc);color:#fff;border-color:var(--acc)}.btn.d{color:var(--warn)}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet>div{background:var(--bg);width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px))}
+.f{display:grid;gap:10px;margin:12px 0}.f label{font-size:13px;color:var(--mute);display:grid;gap:4px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+</style></head><body>
+<header>
+<h1><span>Grocery List</span><span style="display:flex;gap:8px"><button class="ib" id="rcpt" style="width:38px;height:38px;font-size:16px" aria-label="Scan receipt">🧾</button><button class="ib" id="theme" style="width:38px;height:38px;font-size:16px" aria-label="Look and feel">🎨</button></span></h1>
+<div class="chips" id="lists"></div>
+<div class="add"><input id="in" placeholder="Add an item…" autocomplete="off" enterkeyhint="done"><button class="ib" id="mic" aria-label="Voice input">🎤</button><button class="ib go" id="go" aria-label="Add">+</button></div>
+<div class="chips" id="sug" style="padding-top:8px"></div>
+<div class="tabs"><button data-tab="trip" id="t1">This trip</button><button data-tab="lib" id="t2">Saved items</button></div>
+</header>
+<main id="main"></main>
+<div class="bar" id="bar"></div>
+<div id="sheet"></div>
+<script>
+const CATS=["Produce","Dairy & eggs","Meat & fish","Bakery","Pantry","Frozen","Drinks","Snacks","Household","Health & pharmacy","Other"];
+const KW={Produce:"apple banana orange lemon lime lettuce spinach tomato onion garlic potato carrot pepper avocado berry grape cucumber broccoli herb cilantro",
+"Dairy & eggs":"milk egg cheese butter yogurt cream",
+"Meat & fish":"chicken beef pork steak salmon fish shrimp turkey bacon sausage",
+Bakery:"bread bagel tortilla bun roll muffin",
+Pantry:"rice pasta flour sugar oil sauce beans cereal oat coffee tea salt spice honey",
+Frozen:"frozen ice pizza",Drinks:"juice soda water wine beer",Snacks:"chip cracker cookie chocolate nut popcorn",
+Household:"paper towel soap detergent trash sponge foil tissue",
+"Health & pharmacy":"vitamin medicine pill bandage shampoo toothpaste"};
+const $=s=>document.querySelector(s),uid=()=>Math.random().toString(36).slice(2,9);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const K="grocery-v1";let S=null;
+try{S=JSON.parse(localStorage.getItem(K))}catch(e){}
+if(!S){S={lists:[{id:"main",name:"Groceries"},{id:"costco",name:"Costco"}],active:"main",items:{},trip:{main:{},costco:{}},tab:"trip",edit:null};
+[["Milk","Dairy & eggs"],["Eggs","Dairy & eggs"],["Bananas","Produce"],["Spinach","Produce"],["Chicken breast","Meat & fish"],["Sourdough bread","Bakery"],["Rice","Pantry"],["Olive oil","Pantry"],["Coffee","Pantry"],["Paper towels","Household"]].forEach(([n,c],i)=>{S.items[uid()]={n,c,fav:i<4,note:"",price:0,count:0}})}
+let sugText="";S.edit=null;S.settings=false;S.rc=null;
+function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+function curMode(){return S.mode||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}
+function applyTheme(){const r=document.documentElement;r.dataset.pal=S.pal||"rose";r.dataset.theme=curMode()}
+const hasA=i=>String(S.items[i].aisle||"").trim()!=="";
+const UN=["ea","lb","oz","kg","pack","dozen"],unit=i=>S.items[i].unit||"ea",showP=()=>S.prices!==false,money=n=>"$"+n.toFixed(2);
+const price=i=>{const e=T()[i];return e&&e.p>0?e.p:(S.items[i].price||0)};
+function learn(i){const it=S.items[i],e=T()[i];if(!(e&&e.p>0))return;it.ph=it.ph||[];if(e.l)it.ph.pop();it.ph.push(e.p);it.ph=it.ph.slice(-5);e.l=true;it.price=Math.round(it.ph.reduce((a,b)=>a+b,0)/it.ph.length*100)/100}
+function priceLine(i){if(!showP())return "";const it=S.items[i],e=T()[i],p=price(i);
+ return `<small class="pl">$<input class="pr" data-price="${i}" type="number" step="0.01" min="0" inputmode="decimal" placeholder="${it.price?it.price.toFixed(2):"price"}" value="${e.p>0?e.p:""}">/${unit(i)}${p?` × ${e.q} = <strong>${money(p*e.q)}</strong>${e.p>0?"":"<em>est.</em>"}`:""}</small>`}
+const SKIP=/total|tax|change|cash|visa|master|debit|credit|balance|saving|discount|tender|due|card|amount|points|payment|thank|member|coupon|approved|auth/i;
+const norm=s=>s.toLowerCase().replace(/[^a-z ]/g," ").replace(/\s+/g," ").trim(),stem=w=>w.replace(/(es|s)$/,"");
+function matchItem(raw){const k=norm(raw);if(S.alias&&S.alias[k]&&S.items[S.alias[k]])return S.alias[k];
+ const rt=k.split(" ").filter(w=>w.length>=3).map(stem);if(!rt.length)return "skip";let best="skip",bs=0;
+ for(const i in S.items){const it=S.items[i],tt=norm(it.n).split(" ").filter(w=>w.length>=3).map(stem);if(!tt.length)continue;
+  const hit=tt.filter(t=>rt.some(r=>r===t||(r.length>=4&&t.startsWith(r))||(t.length>=4&&r.startsWith(t)))).length;
+  const sc=hit/tt.length+(T()[i]?0.05:0);if(hit&&sc>bs){bs=sc;best=i}}
+ return bs>=0.5?best:"skip"}
+function parseReceipt(txt){const rows=[];txt.split(/\r?\n/).forEach(l=>{l=l.trim();if(!l||SKIP.test(l))return;
+ const m=l.match(/(-?)\$?\s?(\d{1,4}[.,]\d{2})\s*[A-Za-z]?\s*$/);if(!m||m[1])return;
+ const price=parseFloat(m[2].replace(",","."));
+ const raw=l.slice(0,m.index).replace(/\b\d{5,}\b/g," ").replace(/\d+\s*[x@]\s*\$?\d*[.,]?\d*/gi," ").replace(/[$*#]/g," ").replace(/\s+/g," ").trim();
+ if(norm(raw).length<2)return;rows.push({raw,price,id:matchItem(raw)})});return rows}
+const rcSumText=()=>{const r=S.rc,u=r.rows.filter(x=>x.id!=="skip");return `${u.length} of ${r.rows.length} lines matched · ${money(u.reduce((s,x)=>s+x.price,0))}. Fix any that are wrong; the app remembers your choices.`};
+function rcHTML(){const r=S.rc;
+ if(r.step==="paste")return `<div class="sheet" data-act="closerc"><div><b style="font-size:18px">Scan a receipt</b><p class="mute" style="font-size:14px;margin:8px 0">Photograph the receipt, open it in Gallery, tap the text icon (or long-press the text) to copy it, then paste it here.</p><div class="f"><textarea id="rc-t" rows="8" placeholder="Paste receipt text…">${esc(r.text||"")}</textarea></div><div class="two"><button class="btn" data-act="closerc">Cancel</button><button class="btn p" data-act="rcread">Read receipt</button></div></div></div>`;
+ const ids=Object.keys(S.items).sort((a,b)=>S.items[a].n.localeCompare(S.items[b].n));
+ const opts=s=>`<option value="skip" ${s==="skip"?"selected":""}>Skip this line</option><option value="new" ${s==="new"?"selected":""}>+ Add as new item</option>`+ids.map(i=>`<option value="${i}" ${s===i?"selected":""}>${esc(S.items[i].n)}</option>`).join("");
+ return `<div class="sheet" data-act="closerc"><div style="max-height:88vh;overflow:auto"><b style="font-size:18px">Check the matches</b><p class="mute" id="rc-sum" style="font-size:14px;margin:8px 0">${rcSumText()}</p>${r.rows.map((x,n)=>`<div class="card" style="padding:10px 12px;margin-bottom:8px"><div class="mute" style="font-size:13px">${esc(x.raw)}</div><div class="two" style="grid-template-columns:1fr 90px;margin-top:6px"><select data-rcs="${n}">${opts(x.id)}</select><input data-rcp="${n}" type="number" step="0.01" inputmode="decimal" value="${x.price}"></div></div>`).join("")||`<div class="empty">No priced lines found. Make sure the prices were copied too.</div>`}<div class="two"><button class="btn" data-act="rcback">Back</button><button class="btn p" data-act="rcapply">Apply prices</button></div></div></div>`}
+function rcApply(){const r=S.rc;S.alias=S.alias||{};const t=T();
+ r.rows.forEach(x=>{if(x.id==="skip")return;let id=x.id;
+  if(id==="new"){id=uid();S.items[id]={n:x.raw.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase()),c:guess(x.raw),fav:false,note:"",price:0,count:0}}
+  S.alias[norm(x.raw)]=id;if(!t[id])addTrip(id);const e=t[id];e.p=Math.round(x.price/e.q*100)/100;e.c=true;learn(id)});
+ S.rc=null}
+function settingsHTML(){const P=[["rose","Pink & purple"],["blue","Blue"]],M=[["light","Light"],["dark","Dark"]],p=S.pal||"rose",m=curMode();
+ return `<div class="sheet" data-act="closeset"><div><b style="font-size:18px">Look & feel</b><div class="sec">Palette</div><div class="two">${P.map(([k,n])=>`<button class="btn ${p===k?"p":""}" data-pal="${k}">${n}</button>`).join("")}</div><div class="sec">Background</div><div class="two">${M.map(([k,n])=>`<button class="btn ${m===k?"p":""}" data-mode="${k}">${n}</button>`).join("")}</div><div class="sec">Prices &amp; running total</div><div class="two"><button class="btn ${showP()?"p":""}" data-prices="1">On</button><button class="btn ${showP()?"":"p"}" data-prices="0">Off</button></div><div style="height:14px"></div><button class="btn p" style="width:100%" data-act="closeset">Done</button></div></div>`}
+const T=()=>S.trip[S.active]||(S.trip[S.active]={});
+function guess(n){n=n.toLowerCase();for(const c in KW)if(KW[c].split(" ").some(k=>n.includes(k)))return c;return "Other"}
+function addTrip(id,q){const t=T();if(t[id]){t[id].q+=q||1;t[id].c=false}else t[id]={q:q||1,c:false};S.items[id].count++;}
+function addByName(raw){const n=raw.trim();if(!n)return;
+ let id=Object.keys(S.items).find(i=>S.items[i].n.toLowerCase()===n.toLowerCase());
+ if(!id){id=uid();S.items[id]={n:n[0].toUpperCase()+n.slice(1),c:guess(n),fav:false,note:"",price:0,count:0}}
+ addTrip(id)}
+function render(){applyTheme();
+ $("#lists").innerHTML=S.lists.map(l=>`<button class="chip ${l.id===S.active?"on":""}" data-list="${l.id}">${esc(l.name)}</button>`).join("")+`<button class="chip" data-act="newlist">+ List</button>`;
+ $("#t1").className=S.tab==="trip"?"on":"";$("#t2").className=S.tab==="lib"?"on":"";
+ renderSug();
+ const m=$("#main"),t=T();
+ if(S.tab==="trip"){
+  const ids=Object.keys(t).filter(i=>S.items[i]);
+  if(!ids.length){m.innerHTML=`<div class="empty">Nothing on this list yet.<br>Type above, tap a suggestion, or pick from <b>Saved items</b>.</div>`}
+  else{let h="";
+   const un=ids.filter(i=>!t[i].c);
+   [...new Set(un.filter(hasA).map(i=>String(S.items[i].aisle).trim()))].sort((a,b)=>parseFloat(a)-parseFloat(b)||a.localeCompare(b,undefined,{numeric:true})).forEach(a=>{const g=un.filter(i=>hasA(i)&&String(S.items[i].aisle).trim()===a);h+=`<div class="sec">Aisle ${esc(a)}</div><div class="card">${g.map(tripRow).join("")}</div>`});
+   CATS.forEach(c=>{const g=un.filter(i=>!hasA(i)&&S.items[i].c===c);if(g.length)h+=`<div class="sec">${c}</div><div class="card">${g.map(tripRow).join("")}</div>`});
+   const dn=ids.filter(i=>t[i].c);if(dn.length)h+=`<div class="sec">In the cart · ${dn.length}</div><div class="card">${dn.map(tripRow).join("")}</div>`;
+   m.innerHTML=h}
+ }else{
+  const q=($("#in").value||"").toLowerCase(),all=Object.keys(S.items).filter(i=>S.items[i].n.toLowerCase().includes(q));
+  let h="";const favs=all.filter(i=>S.items[i].fav);
+  if(favs.length)h+=`<div class="sec">★ Favorites</div><div class="card">${favs.map(libRow).join("")}</div>`;
+  CATS.forEach(c=>{const g=all.filter(i=>S.items[i].c===c&&!S.items[i].fav);if(g.length)h+=`<div class="sec">${c}</div><div class="card">${g.map(libRow).join("")}</div>`});
+  m.innerHTML=h||`<div class="empty">No saved items match.</div>`}
+ const ids=Object.keys(t).filter(i=>S.items[i]),n=ids.length,d=ids.filter(i=>t[i].c).length,est=ids.reduce((s,i)=>s+price(i)*t[i].q,0),cart=ids.filter(i=>t[i].c).reduce((s,i)=>s+price(i)*t[i].q,0);
+ $("#bar").innerHTML=`<div class="info"><b>${d} of ${n} checked</b>${showP()&&est?`In cart ${money(cart)} · List est. ${money(est)}`:"Tap an item to check it off"}</div>${d?`<button class="btn" data-act="clear">Clear checked</button>`:""}${n?`<button class="btn d" data-act="newtrip">New trip</button>`:""}`;
+ renderSheet()}
+function tripRow(i){const it=S.items[i],e=T()[i];
+ return `<div class="row ${e.c?"done":""}" data-toggle="${i}"><div class="box">${e.c?"✓":""}</div><div class="nm"><b>${esc(it.n)}</b>${it.note?`<small>${esc(it.note)}</small>`:""}${priceLine(i)}</div><div class="q"><button data-dec="${i}" aria-label="Less">−</button><span>${e.q}</span><button data-inc="${i}" aria-label="More">+</button></div><button class="mute" data-edit="${i}" aria-label="Edit">⋯</button></div>`}
+function libRow(i){const it=S.items[i],e=T()[i];
+ return `<div class="row" data-pick="${i}"><button class="star ${it.fav?"on":""}" data-fav="${i}" aria-label="Favorite">★</button><div class="nm"><b>${esc(it.n)}</b>${(it.aisle||it.note||(showP()&&it.price))?`<small>${esc([it.aisle?"Aisle "+it.aisle:"",it.note,showP()&&it.price?money(it.price)+"/"+(it.unit||"ea"):""].filter(Boolean).join(" · "))}</small>`:""}</div>${e?`<span class="badge">× ${e.q}</span>`:`<span class="mute">+ Add</span>`}<button class="mute" data-edit="${i}" aria-label="Edit">⋯</button></div>`}
+function renderSug(){
+ const t=T(),v=sugText.trim().toLowerCase();let h="";
+ if(v){const m=Object.keys(S.items).filter(i=>S.items[i].n.toLowerCase().includes(v)&&!t[i]).slice(0,5);
+  h=m.map(i=>`<button class="chip sug" data-pick="${i}">${esc(S.items[i].n)}</button>`).join("")+`<button class="chip" data-act="addnew">Add “${esc(sugText.trim())}”</button>`}
+ else if(S.tab==="trip"){const m=Object.keys(S.items).filter(i=>!t[i]).sort((a,b)=>(S.items[b].fav-S.items[a].fav)||(S.items[b].count-S.items[a].count)).slice(0,8);
+  if(m.length)h=`<span class="mute" style="font-size:13px;align-self:center">Often:</span>`+m.map(i=>`<button class="chip sug" data-pick="${i}">${esc(S.items[i].n)}</button>`).join("")}
+ $("#sug").innerHTML=h}
+function renderSheet(){if(S.settings){$("#sheet").innerHTML=settingsHTML();return}
+ if(S.rc){$("#sheet").innerHTML=rcHTML();return}const i=S.edit,it=S.items[i];
+ if(!it){$("#sheet").innerHTML="";return}
+ $("#sheet").innerHTML=`<div class="sheet" data-act="close"><div><b style="font-size:18px">Edit item</b><div class="f"><label>Name<input id="e-n" value="${esc(it.n)}"></label><label>Category (used if no aisle #)<select id="e-c">${CATS.map(c=>`<option ${c===it.c?"selected":""}>${c}</option>`).join("")}</select></label><label>Note<input id="e-note" value="${esc(it.note)}" placeholder="organic, brand X, ripe ones…"></label><div class="two"><label>Aisle # (optional)<input id="e-a" maxlength="4" value="${esc(it.aisle||"")}" placeholder="e.g. 7"></label><label>Price ($)<input id="e-p" type="number" step="0.01" min="0" inputmode="decimal" value="${it.price||""}"></label></div><div class="two"><label>Price per<select id="e-u">${UN.map(u=>`<option ${u===(it.unit||"ea")?"selected":""}>${u}</option>`).join("")}</select></label><label>Learned from<input disabled value="${(it.ph||[]).length?it.ph.length+' recorded (avg)':'none yet'}"></label></div></div><div class="two"><button class="btn d" data-act="del">Delete item</button><button class="btn p" data-act="saveedit">Save</button></div></div></div>`}
+document.addEventListener("click",ev=>{if(ev.target.closest("input"))return;
+ const el=ev.target.closest("[data-list],[data-tab],[data-act],[data-toggle],[data-inc],[data-dec],[data-edit],[data-pick],[data-fav],[data-pal],[data-mode],[data-prices]");if(!el)return;
+ const d=el.dataset,t=T();
+ if(d.prices)S.prices=d.prices==="1";
+ else if(d.pal)S.pal=d.pal;
+ else if(d.mode)S.mode=d.mode;
+ else if(d.act==="closeset"){if(ev.target!==el)return;S.settings=false}
+ else if(d.act==="closerc"){if(ev.target!==el)return;S.rc=null}
+ else if(d.act==="rcread"){S.rc.text=$("#rc-t").value;S.rc.rows=parseReceipt(S.rc.text);S.rc.step="review"}
+ else if(d.act==="rcback")S.rc.step="paste";
+ else if(d.act==="rcapply")rcApply();
+ else if(d.list)S.active=d.list;
+ else if(d.tab)S.tab=d.tab;
+ else if(d.fav){S.items[d.fav].fav=!S.items[d.fav].fav}
+ else if(d.edit)S.edit=d.edit;
+ else if(d.inc)t[d.inc].q++;
+ else if(d.dec){if(t[d.dec].q>1)t[d.dec].q--;else delete t[d.dec]}
+ else if(d.toggle){const e=t[d.toggle];e.c=!e.c;if(e.c)learn(d.toggle)}
+ else if(d.pick){if(t[d.pick]&&S.tab==="lib")delete t[d.pick];else if(!t[d.pick])addTrip(d.pick);$("#in").value="";sugText=""}
+ else if(d.act==="newlist"){const n=prompt("Name of the new list (e.g. Pharmacy)");if(n&&n.trim()){const id=uid();S.lists.push({id,name:n.trim()});S.trip[id]={};S.active=id}}
+ else if(d.act==="clear"){for(const i in t)if(t[i].c)delete t[i]}
+ else if(d.act==="newtrip"){if(confirm("Start a new trip? This empties the list; your saved items stay."))S.trip[S.active]={}}
+ else if(d.act==="addnew"){addByName($("#in").value);$("#in").value="";sugText=""}
+ else if(d.act==="close"){if(ev.target!==el)return;S.edit=null}
+ else if(d.act==="del"){if(confirm("Delete this item from your saved items?")){for(const l in S.trip)delete S.trip[l][S.edit];delete S.items[S.edit];S.edit=null}}
+ else if(d.act==="saveedit"){const it=S.items[S.edit];it.n=$("#e-n").value.trim()||it.n;it.c=$("#e-c").value;it.note=$("#e-note").value.trim();const np=parseFloat($("#e-p").value)||0;if(np!==it.price){it.ph=np?[np]:[];it.price=np}it.unit=$("#e-u").value;it.aisle=$("#e-a").value.trim();S.edit=null}
+ save();render()});
+document.addEventListener("change",e=>{const i=e.target.dataset&&e.target.dataset.price;if(!i||!S.items[i]||!T()[i])return;const v=parseFloat(e.target.value),en=T()[i];if(v>0)en.p=v;else delete en.p;if(en.c)learn(i);save();render()});
+$("#in").addEventListener("input",e=>{sugText=e.target.value;render()});
+$("#in").addEventListener("keydown",e=>{if(e.key==="Enter"){addByName(e.target.value);e.target.value="";sugText="";save();render()}});
+$("#go").onclick=()=>{addByName($("#in").value);$("#in").value="";sugText="";save();render()};
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR)$("#mic").style.display="none";
+else $("#mic").onclick=()=>{const r=new SR(),b=$("#mic");r.lang=navigator.language||"en-US";b.classList.add("rec");
+ r.onresult=e=>{e.results[0][0].transcript.split(/,| and /i).forEach(addByName);save();render()};
+ r.onend=()=>b.classList.remove("rec");r.onerror=()=>b.classList.remove("rec");try{r.start()}catch(e){b.classList.remove("rec")}};
+$("#theme").onclick=()=>{S.settings=true;render()};
+$("#rcpt").onclick=()=>{S.rc={step:"paste",text:"",rows:[]};render()};
+document.addEventListener("change",e=>{const d=e.target.dataset;if(!S.rc||!d)return;if(d.rcs!==undefined)S.rc.rows[d.rcs].id=e.target.value;else if(d.rcp!==undefined)S.rc.rows[d.rcp].price=parseFloat(e.target.value)||0;else return;const s=$("#rc-sum");if(s)s.textContent=rcSumText()});
+render();
+if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script></body></html>
